@@ -4,7 +4,7 @@ import logo from '../assets/images/argentBankLogo.png'
 
 const Logo = () => {
     return (
-        <img src={logo} alt="Argent Bank Logo" />
+        <img src={logo} className="main-nav-logo-image" alt="Argent Bank Logo" />
     )
 }
 
