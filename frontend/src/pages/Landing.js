@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Logo, IconChat, IconMoney, IconSecurity, Footer } from '../components'
 import { FaUserCircle } from 'react-icons/fa'
-import './main.css'
+import './main.scss'
 
 
 const landing = () => {
