@@ -4,7 +4,11 @@ import { Logo, Footer } from '../components'
 import { FaUserCircle } from 'react-icons/fa'
 import './main.scss'
 
+
 const Register = () => {
+
+
+
   return (
     <>
       <nav className="main-nav">
