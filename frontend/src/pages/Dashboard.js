@@ -1,10 +1,52 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Logo, Footer } from '../components'
+import React ,{ useEffect, useState}from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { userInfo,changeUserInfo } from '../action/index';
+import { Link , useNavigate} from 'react-router-dom'
+import { Logo, Footer, Account } from '../components'
 import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa'
 import './main.scss'
+import {accounts} from '../services/accounts'
 
 const Dashboard = () => {
+  const user = useSelector((state) => state.user); //get user state
+  const dispatch = useDispatch()
+  
+  //get user info
+  useEffect(() => {
+      dispatch(userInfo());
+  },[dispatch]);
+
+  //get value of input
+  const [firstName, setfirstName] = useState('');
+const [lastName, setlastName] = useState('');
+  const handleInputChange = (event) => {
+      event.target.id === 'firstName' 
+      ? setfirstName(event.target.value) 
+      : setlastName(event.target.value) 
+  }
+  
+  //change user.firstName & user.lastName in API
+  const onSubmit = (event) =>{
+      event.preventDefault();
+      dispatch(changeUserInfo(firstName,lastName))
+      setShowResults(false)
+  }
+ 
+  //handle display of form
+  const [showResults, setShowResults] = useState(false)
+  const displayForm = () => setShowResults(true)
+  const removeForm = () => setShowResults(false)
+
+  
+
+  const navigate = useNavigate()
+  if(!user.logged){
+    console.log(user)
+    navigate("/")
+  }
+
+
+
   return (
     <>
       <nav className="main-nav">
@@ -30,41 +72,28 @@ const Dashboard = () => {
       {/* main */}
       <main class="main bg-dark">
         <div class="header">
-          <h1>Welcome back<br />Tony Jarvis!</h1>
-          <button class="edit-button">Edit Name</button>
+        {!showResults ? <h1>Welcome back  <br />{user.firstName} {user.lastName}</h1> : <h1>Welcome back</h1>}
+
+           {showResults && 
+                <form onSubmit={onSubmit}>
+                    <div className="input">
+                        <input required className="input-edit" type="text" id="firstName" placeholder={user.firstName}  value={firstName} onChange={handleInputChange}/>
+                        <input required className="input-edit" type="text" id="lastName" placeholder={user.lastName} value={lastName} onChange={handleInputChange}/>
+                    </div>
+                    <div className="buttons">
+                        <button className="edit-button form-button" type="submit"  >Save</button>
+                        <button className="edit-button form-button" type='button' onClick={removeForm} >Cancel</button>
+                    </div>
+                </form>
+                 }
+                {!showResults &&  <button className="edit-button" onClick={displayForm}>Edit Name</button> }
         </div>
+
         <h2 class="sr-only">Accounts</h2>
-        <section class="account">
-          <div class="account-content-wrapper">
-            <h3 class="account-title">Argent Bank Checking (x8349)</h3>
-            <p class="account-amount">$2,082.79</p>
-            <p class="account-amount-description">Available Balance</p>
-          </div>
-          <div class="account-content-wrapper cta">
-            <button class="transaction-button">View transactions</button>
-          </div>
-        </section>
-        <section class="account">
-          <div class="account-content-wrapper">
-            <h3 class="account-title">Argent Bank Savings (x6712)</h3>
-            <p class="account-amount">$10,928.42</p>
-            <p class="account-amount-description">Available Balance</p>
-          </div>
-          <div class="account-content-wrapper cta">
-            <button class="transaction-button">View transactions</button>
-          </div>
-        </section>
-        <section class="account">
-          <div class="account-content-wrapper">
-            <h3 class="account-title">Argent Bank Credit Card (x8349)</h3>
-            <p class="account-amount">$184.30</p>
-            <p class="account-amount-description">Current Balance</p>
-          </div>
-          <div class="account-content-wrapper cta">
-            <button class="transaction-button">View transactions</button>
-          </div>
-        </section>
-      </main>
+        {accounts.map((account,index) =>
+                <Account key={index} title={account.title} amount={account.amount} description={account.description} />
+            )};
+      </main> 
 
       {/* footer */}
       <Footer />

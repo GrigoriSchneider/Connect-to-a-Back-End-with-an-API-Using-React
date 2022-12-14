@@ -3,6 +3,7 @@ import IconChat from "./IconChat";
 import IconMoney from "./IconMoney";
 import IconSecurity from "./IconSecurity";
 import Footer from "./Footer";
+import Account from "./Account";
 
 
 
@@ -11,6 +12,6 @@ export {
     IconChat,
     IconMoney,
     IconSecurity,
-    Footer
-
+    Footer,
+    Account
 }
